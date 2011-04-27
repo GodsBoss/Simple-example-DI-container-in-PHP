@@ -8,6 +8,22 @@ class SimpleServiceMock{
 	public function __construct(){
 		self::$created = TRUE;}}
 
+class ServiceDependencyMock{}
+
+class ServiceWithArgumentsMock{
+	private $name;
+	private $dependency;
+
+	public function __construct($name, $dependency){
+		$this->name       = $name;
+		$this->dependency = $dependency;}
+
+	public function getName(){
+		return $this->name;}
+
+	public function getDependency(){
+		return $this->dependency;}}
+
 class SimpleDITest extends PHPUnit_Framework_TestCase{
 	public function test_construction(){
 		$di = new SimpleDI();}
@@ -41,4 +57,17 @@ class SimpleDITest extends PHPUnit_Framework_TestCase{
 	public function test_singleton_services(){
 		$di = new SimpleDI();
 		$di->setService('simple', 'SimpleServiceMock');
-		$this->assertTrue($di->get('simple') === $di->get('simple'));}}
+		$this->assertTrue($di->get('simple') === $di->get('simple'));}
+
+	public function test_service_with_arguments(){
+		$di = new SimpleDI();
+		$di->
+			setService('complex', 'ServiceWithArgumentsMock')->
+			addArgument('name')->
+			addArgument('dependency');
+		$di->setParameter('name', 'shtring');
+		$di->setService('dependency', 'ServiceDependencyMock');
+		$complex = $di->get('complex');
+		$this->assertEquals('ServiceWithArgumentsMock', get_class($complex));
+		$this->assertEquals($complex->getName(), $di->get('name'));
+		$this->assertEquals($complex->getDependency(), $di->get('dependency'));}}
