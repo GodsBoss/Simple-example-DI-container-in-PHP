@@ -3,6 +3,7 @@
 class SimpleDI{
 	private $params = array();
 	private $services = array();
+	private $serviceObjects = array();
 
 	public function setParameter($name, $value){
 		$this->params[$name] = $value;
@@ -13,8 +14,10 @@ class SimpleDI{
 			return $this->params[$name];}
 		else{
 			if (array_key_exists($name, $this->services)){
-				$class = $this->services[$name];
-				return new $class();}
+				if (!array_key_exists($name, $this->serviceObjects)){
+					$class = $this->services[$name];
+					$this->serviceObjects[$name] = new $class();}
+				return $this->serviceObjects[$name];}
 			else{
 				throw new OutOfBoundsException();}}}
 

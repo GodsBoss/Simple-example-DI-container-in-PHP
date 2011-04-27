@@ -32,4 +32,9 @@ class SimpleDITest extends PHPUnit_Framework_TestCase{
 		SimpleServiceMock::$created = FALSE;
 		$di = new SimpleDI();
 		$di->setService('simple', 'SimpleServiceMock');
-		$this->assertFalse(SimpleServiceMock::$created);}}
+		$this->assertFalse(SimpleServiceMock::$created);}
+
+	public function test_singleton_services(){
+		$di = new SimpleDI();
+		$di->setService('simple', 'SimpleServiceMock');
+		$this->assertTrue($di->get('simple') === $di->get('simple'));}}
