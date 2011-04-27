@@ -1,5 +1,8 @@
 <?php
 
+/**
+* A service definition.
+*/
 class SimpleDI_ServiceDefinition{
 	private $className;
 	private $arguments = array();
@@ -20,6 +23,9 @@ class SimpleDI_ServiceDefinition{
 		$this->arguments[] = $name;
 		return $this;}}
 
+/**
+* Facade visible to the client. Does not allow instantiation of services.
+*/
 class SimpleDI_ServiceDefinitionFacade{
 	private $definition;
 
@@ -30,6 +36,9 @@ class SimpleDI_ServiceDefinitionFacade{
 		$this->definition->addArgument($name);
 		return $this;}}
 
+/**
+* Container for all services and parameters.
+*/
 class SimpleDI{
 	private $params = array();
 	private $services = array();
