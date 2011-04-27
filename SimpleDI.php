@@ -9,14 +9,17 @@ class SimpleDI{
 		$this->params[$name] = $value;
 		return $this;}
 
+	private function maybeCreateServiceObject($name){
+		if (!array_key_exists($name, $this->serviceObjects)){
+			$class = $this->services[$name];
+			$this->serviceObjects[$name] = new $class();}}
+
 	public function get($name){
 		if (array_key_exists($name, $this->params)){
 			return $this->params[$name];}
 		else{
 			if (array_key_exists($name, $this->services)){
-				if (!array_key_exists($name, $this->serviceObjects)){
-					$class = $this->services[$name];
-					$this->serviceObjects[$name] = new $class();}
+				$this->maybeCreateServiceObject($name);
 				return $this->serviceObjects[$name];}
 			else{
 				throw new OutOfBoundsException();}}}
