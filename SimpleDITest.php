@@ -2,7 +2,11 @@
 
 require_once('SimpleDI.php');
 
-class SimpleServiceMock{}
+class SimpleServiceMock{
+	public static $created = FALSE;
+
+	public function __construct(){
+		self::$created = TRUE;}}
 
 class SimpleDITest extends PHPUnit_Framework_TestCase{
 	public function test_construction(){
@@ -22,4 +26,10 @@ class SimpleDITest extends PHPUnit_Framework_TestCase{
 		$di = new SimpleDI();
 		$di->setService('simple', 'SimpleServiceMock');
 		$simple = $di->get('simple');
-		$this->assertEquals('SimpleServiceMock', get_class($simple));}}
+		$this->assertEquals('SimpleServiceMock', get_class($simple));}
+
+	public function test_lazy_creation_of_services(){
+		SimpleServiceMock::$created = FALSE;
+		$di = new SimpleDI();
+		$di->setService('simple', 'SimpleServiceMock');
+		$this->assertFalse(SimpleServiceMock::$created);}}
