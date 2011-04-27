@@ -43,15 +43,18 @@ class SimpleDI{
 		if (!array_key_exists($name, $this->serviceObjects)){
 			$this->serviceObjects[$name] = $this->services[$name]->create($this);}}
 
+	private function findService($name){
+		if (array_key_exists($name, $this->services)){
+			$this->maybeCreateServiceObject($name);
+			return $this->serviceObjects[$name];}
+		else{
+			throw new OutOfBoundsException();}}
+
 	public function get($name){
 		if (array_key_exists($name, $this->params)){
 			return $this->params[$name];}
 		else{
-			if (array_key_exists($name, $this->services)){
-				$this->maybeCreateServiceObject($name);
-				return $this->serviceObjects[$name];}
-			else{
-				throw new OutOfBoundsException();}}}
+			return $this->findService($name);}}
 
 	public function setService($name, $class){
 		$this->services[$name] = new SimpleDI_ServiceDefinition($class);
