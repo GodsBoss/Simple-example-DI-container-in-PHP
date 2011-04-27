@@ -2,6 +2,7 @@
 
 class SimpleDI{
 	private $params = array();
+	private $services = array();
 
 	public function setParameter($name, $value){
 		$this->params[$name] = $value;
@@ -11,4 +12,11 @@ class SimpleDI{
 		if (array_key_exists($name, $this->params)){
 			return $this->params[$name];}
 		else{
-			throw new OutOfBoundsException();}}}
+			if (array_key_exists($name, $this->services)){
+				$class = $this->services[$name];
+				return new $class();}
+			else{
+				throw new OutOfBoundsException();}}}
+
+	public function setService($name, $class){
+		$this->services[$name] = $class;}}
