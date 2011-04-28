@@ -25,49 +25,44 @@ class ServiceWithArgumentsMock{
 		return $this->dependency;}}
 
 class SimpleDITest extends PHPUnit_Framework_TestCase{
-	public function test_construction(){
-		$di = new SimpleDI();}
+	private $di;
+
+	public function setUp(){
+		$this->di = new SimpleDI();}
 
 	public function test_parameter(){
-		$di = new SimpleDI();
-		$di->setParameter('foo', 'bar');
-		$this->assertEquals('bar', $di->get('foo'));}
+		$this->di->setParameter('foo', 'bar');
+		$this->assertEquals('bar', $this->di->get('foo'));}
 
 	public function test_returning_container_after_setting_parameter(){
-		$di = new SimpleDI();
-		$this->assertTrue($di === $di->setParameter('foo', 'bar'));}
+		$this->assertTrue($this->di === $this->di->setParameter('foo', 'bar'));}
 
 	public function test_out_of_bounds_exception_for_invalid_parameters(){
-		$di = new SimpleDI();
 		$this->setExpectedException('OutOfBoundsException');
-		$di->get('foo');}
+		$this->di->get('foo');}
 
 	public function test_simple_service(){
-		$di = new SimpleDI();
-		$di->setService('simple', 'SimpleServiceMock');
-		$simple = $di->get('simple');
+		$this->di->setService('simple', 'SimpleServiceMock');
+		$simple = $this->di->get('simple');
 		$this->assertEquals('SimpleServiceMock', get_class($simple));}
 
 	public function test_lazy_creation_of_services(){
 		SimpleServiceMock::$created = FALSE;
-		$di = new SimpleDI();
-		$di->setService('simple', 'SimpleServiceMock');
+		$this->di->setService('simple', 'SimpleServiceMock');
 		$this->assertFalse(SimpleServiceMock::$created);}
 
 	public function test_singleton_services(){
-		$di = new SimpleDI();
-		$di->setService('simple', 'SimpleServiceMock');
-		$this->assertTrue($di->get('simple') === $di->get('simple'));}
+		$this->di->setService('simple', 'SimpleServiceMock');
+		$this->assertTrue($this->di->get('simple') === $this->di->get('simple'));}
 
 	public function test_service_with_arguments(){
-		$di = new SimpleDI();
-		$di->
+		$this->di->
 			setService('complex', 'ServiceWithArgumentsMock')->
 			addArgument('name')->
 			addArgument('dependency');
-		$di->setParameter('name', 'shtring');
-		$di->setService('dependency', 'ServiceDependencyMock');
-		$complex = $di->get('complex');
+		$this->di->setParameter('name', 'shtring');
+		$this->di->setService('dependency', 'ServiceDependencyMock');
+		$complex = $this->di->get('complex');
 		$this->assertEquals('ServiceWithArgumentsMock', get_class($complex));
-		$this->assertEquals($complex->getName(), $di->get('name'));
-		$this->assertEquals($complex->getDependency(), $di->get('dependency'));}}
+		$this->assertEquals($complex->getName(), $this->di->get('name'));
+		$this->assertEquals($complex->getDependency(), $this->di->get('dependency'));}}
