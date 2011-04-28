@@ -1,7 +1,5 @@
 <?php
 
-require_once('SimpleDI.php');
-
 class SimpleServiceMock{
 	public static $created = FALSE;
 
@@ -28,7 +26,7 @@ class SimpleDITest extends PHPUnit_Framework_TestCase{
 	private $di;
 
 	public function setUp(){
-		$this->di = new SimpleDI(new SimpleDI_ServiceFactory());}
+		$this->di = new SimpleDI_Container(new SimpleDI_ServiceFactory());}
 
 	public function test_parameter(){
 		$this->di->setParameter('foo', 'bar');

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit>
+<phpunit
+	bootstrap="test/bootstrap.php">
 	<testsuites>
 		<testsuite name="Simple DI Tests">
-			<file>test/SimpleDITest.php</file>
+			<directory>test/SimpleDI</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
