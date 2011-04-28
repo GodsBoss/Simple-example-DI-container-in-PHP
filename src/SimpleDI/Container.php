@@ -3,7 +3,7 @@
 /**
 * Container for all services and parameters.
 */
-class SimpleDI_Container{
+class SimpleDI_Container implements SimpleDI_API{
 	private $serviceFactory;
 	private $params = array();
 	private $services = array();
