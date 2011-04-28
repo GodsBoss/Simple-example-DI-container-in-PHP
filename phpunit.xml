@@ -3,7 +3,7 @@
 <phpunit>
 	<testsuites>
 		<testsuite name="Simple DI Tests">
-			<file>SimpleDITest.php</file>
+			<file>test/SimpleDITest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>
