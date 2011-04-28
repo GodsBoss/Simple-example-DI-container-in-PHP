@@ -36,13 +36,24 @@ class SimpleDI_ServiceDefinitionFacade{
 		$this->definition->addArgument($name);
 		return $this;}}
 
+class SimpleDI_ServiceFactory{
+	public function createDefinition($class){
+		return new SimpleDI_ServiceDefinition($class);}
+
+	public function createFacade(SimpleDI_ServiceDefinition $definition){
+		return new SimpleDI_ServiceDefinitionFacade($definition);}}
+
 /**
 * Container for all services and parameters.
 */
 class SimpleDI{
+	private $serviceFactory;
 	private $params = array();
 	private $services = array();
 	private $serviceObjects = array();
+
+	public function __construct(SimpleDI_ServiceFactory $factory){
+		$this->serviceFactory = $factory;}
 
 	public function setParameter($name, $value){
 		$this->params[$name] = $value;
@@ -66,5 +77,5 @@ class SimpleDI{
 			return $this->findService($name);}}
 
 	public function setService($name, $class){
-		$this->services[$name] = new SimpleDI_ServiceDefinition($class);
-		return new SimpleDI_ServiceDefinitionFacade($this->services[$name]);}}
+		$this->services[$name] = $this->serviceFactory->createDefinition($class);
+		return $this->serviceFactory->createFacade($this->services[$name]);}}

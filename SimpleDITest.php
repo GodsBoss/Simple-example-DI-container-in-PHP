@@ -28,7 +28,7 @@ class SimpleDITest extends PHPUnit_Framework_TestCase{
 	private $di;
 
 	public function setUp(){
-		$this->di = new SimpleDI();}
+		$this->di = new SimpleDI(new SimpleDI_ServiceFactory());}
 
 	public function test_parameter(){
 		$this->di->setParameter('foo', 'bar');
