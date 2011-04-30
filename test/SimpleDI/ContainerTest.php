@@ -7,7 +7,8 @@ class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
 
 	public function setUp(){
 		$this->factory = $this->getMock('SimpleDI_ServiceDefinitionFactory');
-		$this->di = new SimpleDI_Container($this->factory);}
+		$this->di = new SimpleDI_Container($this->factory);
+		$this->service = new StdClass();}
 
 	public function test_parameter(){
 		$this->di->setParameter('foo', 'bar');
@@ -27,7 +28,6 @@ class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
 	public function test_service_creation(){
 		$name = 'service_name';
 		$class = 'ServiceClass';
-		$this->service = new stdClass();
 		$definition = $this->getMock('SimpleDI_ServiceDefinition');
 		$definition->
 			expects($this->once())->
