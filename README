@@ -3,3 +3,5 @@ Simple DI container example
 
 Made just to show that a dependency injection container does not need to use
 NULL, if you do it right.
+
+The project is licensed under the terms of the GPLv3. See LICENSE.
