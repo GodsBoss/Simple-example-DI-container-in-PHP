@@ -1,32 +1,13 @@
 <?php
 
-class SimpleServiceMock{
-	public static $created = FALSE;
-
-	public function __construct(){
-		self::$created = TRUE;}}
-
-class ServiceDependencyMock{}
-
-class ServiceWithArgumentsMock{
-	private $name;
-	private $dependency;
-
-	public function __construct($name, $dependency){
-		$this->name       = $name;
-		$this->dependency = $dependency;}
-
-	public function getName(){
-		return $this->name;}
-
-	public function getDependency(){
-		return $this->dependency;}}
-
 class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
+	private $factory;
 	private $di;
+	private $service;
 
 	public function setUp(){
-		$this->di = new SimpleDI_Container(new SimpleDI_ServiceDefinitionFactoryImpl());}
+		$this->factory = $this->getMock('SimpleDI_ServiceDefinitionFactory');
+		$this->di = new SimpleDI_Container($this->factory);}
 
 	public function test_parameter(){
 		$this->di->setParameter('foo', 'bar');
@@ -39,28 +20,44 @@ class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
 		$this->setExpectedException('OutOfBoundsException');
 		$this->di->get('foo');}
 
-	public function test_simple_service(){
-		$this->di->setService('simple', 'SimpleServiceMock');
-		$simple = $this->di->get('simple');
-		$this->assertEquals('SimpleServiceMock', get_class($simple));}
+	public function serviceDefinitionCreate($di){
+		$this->assertEquals($this->di, $di);
+		return $this->service;}
+
+	public function test_service_creation(){
+		$name = 'service_name';
+		$class = 'ServiceClass';
+		$this->service = new stdClass();
+		$definition = $this->getMock('SimpleDI_ServiceDefinition');
+		$definition->
+			expects($this->once())->
+			method('create')->
+			will($this->returnCallback(array($this, 'serviceDefinitionCreate')));
+		$facade = $this->getMock('SimpleDI_ServiceDefinitionFacade');
+		$this->factory->
+			expects($this->once())->
+			method('createDefinition')->
+			with($class)->
+			will($this->returnValue($definition));
+		$this->factory->
+			expects($this->once())->
+			method('createFacade')->
+			with($definition)->
+			will($this->returnValue($facade));
+		$this->assertTrue($facade === $this->di->setService($name, $class));
+		$service = $this->di->get($name);
+		$this->assertTrue($this->service === $service);
+		$this->assertTrue($service === $this->di->get($name));}
 
 	public function test_lazy_creation_of_services(){
-		SimpleServiceMock::$created = FALSE;
-		$this->di->setService('simple', 'SimpleServiceMock');
-		$this->assertFalse(SimpleServiceMock::$created);}
-
-	public function test_singleton_services(){
-		$this->di->setService('simple', 'SimpleServiceMock');
-		$this->assertTrue($this->di->get('simple') === $this->di->get('simple'));}
-
-	public function test_service_with_arguments(){
-		$this->di->
-			setService('complex', 'ServiceWithArgumentsMock')->
-			addArgument('name')->
-			addArgument('dependency');
-		$this->di->setParameter('name', 'shtring');
-		$this->di->setService('dependency', 'ServiceDependencyMock');
-		$complex = $this->di->get('complex');
-		$this->assertEquals('ServiceWithArgumentsMock', get_class($complex));
-		$this->assertEquals($complex->getName(), $this->di->get('name'));
-		$this->assertEquals($complex->getDependency(), $this->di->get('dependency'));}}
+		$class = 'ServiceClass';
+		$definition = $this->getMock('SimpleDI_ServiceDefinition');
+		$definition->
+			expects($this->never())->
+			method('create');
+		$this->factory->
+			expects($this->once())->
+			method('createDefinition')->
+			with($class)->
+			will($this->returnValue($definition));
+		$this->di->setService('simple', $class);}}
