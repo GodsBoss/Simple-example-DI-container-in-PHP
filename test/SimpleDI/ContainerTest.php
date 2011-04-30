@@ -25,6 +25,13 @@ class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals($this->di, $di);
 		return $this->service;}
 
+	public function prepareFactoryCreateDefinition($class, $definition){
+		$this->factory->
+			expects($this->once())->
+			method('createDefinition')->
+			with($class)->
+			will($this->returnValue($definition));}
+
 	public function test_service_creation(){
 		$name = 'service_name';
 		$class = 'ServiceClass';
@@ -34,11 +41,7 @@ class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
 			method('create')->
 			will($this->returnCallback(array($this, 'serviceDefinitionCreate')));
 		$facade = $this->getMock('SimpleDI_ServiceDefinitionFacade');
-		$this->factory->
-			expects($this->once())->
-			method('createDefinition')->
-			with($class)->
-			will($this->returnValue($definition));
+		$this->prepareFactoryCreateDefinition($class, $definition);
 		$this->factory->
 			expects($this->once())->
 			method('createFacade')->
@@ -55,9 +58,5 @@ class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
 		$definition->
 			expects($this->never())->
 			method('create');
-		$this->factory->
-			expects($this->once())->
-			method('createDefinition')->
-			with($class)->
-			will($this->returnValue($definition));
+		$this->prepareFactoryCreateDefinition($class, $definition);
 		$this->di->setService('simple', $class);}}
