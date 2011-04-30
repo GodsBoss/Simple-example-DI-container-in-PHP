@@ -22,7 +22,7 @@ class ServiceWithArgumentsMock{
 	public function getDependency(){
 		return $this->dependency;}}
 
-class SimpleDITest extends PHPUnit_Framework_TestCase{
+class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
 	private $di;
 
 	public function setUp(){
