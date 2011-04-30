@@ -1,4 +1,6 @@
 <?php
 
 require_once(dirname(__FILE__).'/../src/SimpleDI/Autoload.php');
-SimpleDI_Autoload::register();
+
+$autoload = new SimpleDI_Autoload();
+$autoload->register();

@@ -9,11 +9,7 @@ class SimpleDI_Autoload{
 	public function __construct(){
 		$this->dir = dirname(__FILE__).'/..';}
 
-	public static function register(){
-		$autoload = new self();
-		$autoload->registerThis();}
-
-	public function registerThis(){
+	public function register(){
 		spl_autoload_register(array($this, 'autoload'));}
 
 	private function isSimpleDIClass($class){
