@@ -17,12 +17,12 @@ class SimpleDI_Container implements SimpleDI_API{
 	/**
 	* Stores service definitions.
 	*/
-	private $services = array();
+	private $serviceDefinitions = array();
 
 	/**
 	* Stores services.
 	*/
-	private $serviceObjects = array();
+	private $services = array();
 
 	public function __construct(SimpleDI_ServiceDefinitionFactory $factory){
 		$this->serviceFactory = $factory;}
@@ -40,8 +40,8 @@ class SimpleDI_Container implements SimpleDI_API{
 	* @see findService()
 	*/
 	private function maybeCreateServiceObject($name){
-		if (!array_key_exists($name, $this->serviceObjects)){
-			$this->serviceObjects[$name] = $this->services[$name]->create($this);}}
+		if (!array_key_exists($name, $this->services)){
+			$this->services[$name] = $this->serviceDefinitions[$name]->create($this);}}
 
 	/**
 	* Tries to find a service with the given name.
@@ -56,9 +56,9 @@ class SimpleDI_Container implements SimpleDI_API{
 	*   If no service with that name exists.
 	*/
 	private function findService($name){
-		if (array_key_exists($name, $this->services)){
+		if (array_key_exists($name, $this->serviceDefinitions)){
 			$this->maybeCreateServiceObject($name);
-			return $this->serviceObjects[$name];}
+			return $this->services[$name];}
 		else{
 			throw new OutOfBoundsException();}}
 
@@ -69,5 +69,5 @@ class SimpleDI_Container implements SimpleDI_API{
 			return $this->findService($name);}}
 
 	public function setService($name, $class){
-		$this->services[$name] = $this->serviceFactory->createDefinition($class);
-		return $this->serviceFactory->createFacade($this->services[$name]);}}
+		$this->serviceDefinitions[$name] = $this->serviceFactory->createDefinition($class);
+		return $this->serviceFactory->createFacade($this->serviceDefinitions[$name]);}}
