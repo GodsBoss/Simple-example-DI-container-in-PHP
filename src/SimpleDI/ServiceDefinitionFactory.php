@@ -1,5 +1,5 @@
 <?php
 
-interface SimpleDI_ServiceFactory{
+interface SimpleDI_ServiceDefinitionFactory{
 	public function createDefinition($class);
 	public function createFacade(SimpleDI_ServiceDefinition $definition);}

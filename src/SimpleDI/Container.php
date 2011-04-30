@@ -9,7 +9,7 @@ class SimpleDI_Container implements SimpleDI_API{
 	private $services = array();
 	private $serviceObjects = array();
 
-	public function __construct(SimpleDI_ServiceFactory $factory){
+	public function __construct(SimpleDI_ServiceDefinitionFactory $factory){
 		$this->serviceFactory = $factory;}
 
 	public function setParameter($name, $value){

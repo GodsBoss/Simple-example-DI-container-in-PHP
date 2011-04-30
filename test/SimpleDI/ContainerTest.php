@@ -26,7 +26,7 @@ class SimpleDI_ContainerTest extends PHPUnit_Framework_TestCase{
 	private $di;
 
 	public function setUp(){
-		$this->di = new SimpleDI_Container(new SimpleDI_ServiceFactoryImpl());}
+		$this->di = new SimpleDI_Container(new SimpleDI_ServiceDefinitionFactoryImpl());}
 
 	public function test_parameter(){
 		$this->di->setParameter('foo', 'bar');

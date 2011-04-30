@@ -3,7 +3,7 @@
 /**
 * Creates service definition and service definition facades.
 */
-class SimpleDI_ServiceFactoryImpl implements SimpleDI_ServiceFactory{
+class SimpleDI_ServiceDefinitionFactoryImpl implements SimpleDI_ServiceDefinitionFactory{
 	public function createDefinition($class){
 		return new SimpleDI_ServiceDefinitionImpl($class);}
 
