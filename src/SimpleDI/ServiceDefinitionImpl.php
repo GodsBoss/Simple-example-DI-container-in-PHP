@@ -1,12 +1,26 @@
 <?php
 
 /**
-* A service definition.
+* Standard implementation of a service definition.
 */
 class SimpleDI_ServiceDefinitionImpl implements SimpleDI_ServiceDefinition{
+	/**
+	* The service's class name.
+	*/
 	private $className;
+
+	/**
+	* Argument names used for getting the arguments which will be passed to the
+	* service's constructor.
+	*/
 	private $arguments = array();
 
+	/**
+	* Constructor.
+	*
+	* @param $class
+	*   The service's class name.
+	*/
 	public function __construct($class){
 		$this->className = $class;}
 
