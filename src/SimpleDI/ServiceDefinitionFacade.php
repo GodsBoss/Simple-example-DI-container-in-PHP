@@ -14,4 +14,18 @@ interface SimpleDI_ServiceDefinitionFacade{
 	* @return
 	*   The definition facade for further configuration.
 	*/
-	public function addArgument($name);}
+	public function addArgument($name);
+
+	/**
+	* Adds a method call which is applied after creating the service.
+	*
+	* @param $name
+	*   The method name.
+	* @param $argNames (optional)
+	*   Array containing the names of services or parameters which are used as
+	*   arguments to the method call.
+	*
+	* @return
+	*   The definition facade for further configuration.
+	*/
+	public function addCall($name, $argNames = array());}

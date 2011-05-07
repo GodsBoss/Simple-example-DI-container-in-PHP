@@ -16,6 +16,11 @@ class SimpleDI_ServiceDefinitionImpl implements SimpleDI_ServiceDefinition{
 	private $arguments = array();
 
 	/**
+	* Method calls.
+	*/
+	private $calls = array();
+
+	/**
 	* Constructor.
 	*
 	* @param $class
@@ -31,8 +36,18 @@ class SimpleDI_ServiceDefinitionImpl implements SimpleDI_ServiceDefinition{
 		foreach($this->arguments as $name){
 			$args[] = $di->get($name);}
 		$class = new ReflectionClass($this->className);
-		return $class->newInstanceArgs($args);}
+		$object = $class->newInstanceArgs($args);
+
+		// Call methods on object.
+		foreach($this->calls as $call){
+			$args = call_user_func_array(array($object, $call['name']), array_map(array($di, 'get'), $call['argument_names']));}
+
+		return $object;}
 
 	public function addArgument($name){
 		$this->arguments[] = $name;
+		return $this;}
+
+	public function addCall($name, $argNames = array()){
+		$this->calls[] = array('name' => $name, 'argument_names' => $argNames);
 		return $this;}}

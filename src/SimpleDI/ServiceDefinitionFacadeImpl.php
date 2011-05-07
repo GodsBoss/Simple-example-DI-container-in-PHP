@@ -21,4 +21,8 @@ class SimpleDI_ServiceDefinitionFacadeImpl implements SimpleDI_ServiceDefinition
 
 	public function addArgument($name){
 		$this->definition->addArgument($name);
+		return $this;}
+
+	public function addCall($name, $argNames = array()){
+		$this->definition->addCall($name, $argNames);
 		return $this;}}
