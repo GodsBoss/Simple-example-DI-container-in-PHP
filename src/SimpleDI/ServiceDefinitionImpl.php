@@ -29,20 +29,40 @@ class SimpleDI_ServiceDefinitionImpl implements SimpleDI_ServiceDefinition{
 	public function __construct($class){
 		$this->className = $class;}
 
-	public function create(SimpleDI_API $di){
+	/**
+	* Create instance of a service.
+	*
+	* @param $di
+	*   DI container for getting constructor arguments.
+	*
+	* @return
+	*   The service to be created.
+	*/
+	private function createInstance(SimpleDI_API $di){
 		// Big thanks to:
 		// http://blog.ebene7.com/2011/03/21/array-als-parameterliste-an-den-konstruktor-uebergeben/
 		$args = array();
 		foreach($this->arguments as $name){
 			$args[] = $di->get($name);}
 		$class = new ReflectionClass($this->className);
-		$object = $class->newInstanceArgs($args);
+		return $class->newInstanceArgs($args);}
 
-		// Call methods on object.
+	/**
+	* Calls methods on the service.
+	*
+	* @param $di
+	*   DI container for getting method arguments.
+	*
+	* @return
+	*   The service.
+	*/
+	private function callMethods($service, SimpleDI_API $di){
 		foreach($this->calls as $call){
-			$args = call_user_func_array(array($object, $call['name']), array_map(array($di, 'get'), $call['argument_names']));}
+			$args = call_user_func_array(array($service, $call['name']), array_map(array($di, 'get'), $call['argument_names']));}
+		return $service;}
 
-		return $object;}
+	public function create(SimpleDI_API $di){
+		return $this->callMethods($this->createInstance($di), $di);}
 
 	public function addArgument($name){
 		$this->arguments[] = $name;
